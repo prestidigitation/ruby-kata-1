@@ -38,11 +38,11 @@ magazines.each_with_index do |magazine, i|
 end
 
 def find_book_by_isbn(isbn, books)
-  books.select { |book| book[:isbn] == isbn}
+  books.find { |book| book[:isbn] == isbn}
 end
 
 def find_magazine_by_isbn(isbn, magazines)
-  magazines.select { |magazine| magazine[:isbn] == isbn }
+  magazines.find { |magazine| magazine[:isbn] == isbn }
 end
 
 p find_book_by_isbn("2145-8548-3325", books)
