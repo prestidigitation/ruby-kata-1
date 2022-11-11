@@ -41,22 +41,30 @@ class Parser
     @magazines.select { |magazine| magazine[:authors].include?(email) }
   end
 
-  def print_all_books
+  def print_book_info(book)
+    puts "Title: #{book[:title]}"
+    puts "ISBN: #{book[:isbn]}"
+    puts "Authors: #{book[:authors]}"
+    puts "Description: #{book[:description]}"
+  end
+
+  def print_magazine_info(magazine)
+    puts "Title: #{magazine[:title]}"
+    puts "ISBN: #{magazine[:isbn]}"
+    puts "Authors: #{magazine[:authors]}"
+    puts "Publication Date: #{magazine[:publishedat]}"
+  end
+
+  def print_all_book_info
     @books.each_with_index do |book, i|
-      puts "Title: #{book[:title]}"
-      puts "ISBN: #{book[:isbn]}"
-      puts "Authors: #{book[:authors]}"
-      puts "Description: #{book[:description]}"
+      print_book_info(book)
       puts "=" * 100 unless @books[i + 1].nil?
     end
   end
 
-  def print_all_magazines
+  def print_all_magazine_info
     @magazines.each_with_index do |magazine, i|
-      puts "Title: #{magazine[:title]}"
-      puts "ISBN: #{magazine[:isbn]}"
-      puts "Authors: #{magazine[:authors]}"
-      puts "Publication Date: #{magazine[:publishedat]}"
+      print_magazine_info(magazine)
       puts "=" * 100 unless @magazines[i + 1].nil?
     end
   end
@@ -70,7 +78,7 @@ parser = Parser.new(
 
 # p parser.find_book_by_isbn("2145-8548-3325")
 # p parser.find_magazine_by_isbn("2365-8745-7854")
-# parser.print_all_books
+parser.print_all_book_info
 # p parser.find_all_books_by_author_email("")
 # p parser.find_all_books_by_author_email("null-rabe@echocat.org").map { |book| book[:title] }
 # p parser.books
