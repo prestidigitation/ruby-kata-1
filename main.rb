@@ -55,18 +55,26 @@ class Parser
     puts "Publication Date: #{magazine[:publishedat]}"
   end
 
-  def print_all_book_info
-    @books.each_with_index do |book, i|
+  def print_all_book_info(books)
+    books.each_with_index do |book, i|
       print_book_info(book)
-      puts "=" * 100 unless @books[i + 1].nil?
+      puts "=" * 100 unless books[i + 1].nil?
     end
   end
 
-  def print_all_magazine_info
-    @magazines.each_with_index do |magazine, i|
+  def print_all_magazine_info(magazines)
+    magazines.each_with_index do |magazine, i|
       print_magazine_info(magazine)
-      puts "=" * 100 unless @magazines[i + 1].nil?
+      puts "=" * 100 unless magazines[i + 1].nil?
     end
+  end
+
+  def print_all_book_and_magazine_info_sorted
+    sorted_books = @books.sort_by { |book| book[:title]}
+    print_all_book_info(sorted_books)
+    puts "\n"
+    sorted_magazines = @magazines.sort_by { |magazine| magazine[:title] }
+    print_all_magazine_info(sorted_magazines)
   end
 end
 
@@ -78,8 +86,10 @@ parser = Parser.new(
 
 # p parser.find_book_by_isbn("2145-8548-3325")
 # p parser.find_magazine_by_isbn("2365-8745-7854")
-parser.print_all_book_info
+# parser.print_all_book_info
 # p parser.find_all_books_by_author_email("")
 # p parser.find_all_books_by_author_email("null-rabe@echocat.org").map { |book| book[:title] }
 # p parser.books
 # p parser.books.reduce([]) { |acc, book| acc.append(book[:authors]) }
+
+parser.print_all_book_and_magazine_info_sorted
