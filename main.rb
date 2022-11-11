@@ -1,6 +1,7 @@
 require "csv"
 
 class Parser
+  attr_reader :books
   def initialize(authors_path:, books_path:, magazines_path:)
     @authors = CSV.read(
       authors_path,
@@ -32,6 +33,14 @@ class Parser
     @magazines.find { |magazine| magazine[:isbn] == isbn }
   end
 
+  def find_all_books_by_author_email(email)
+    @books.select { |book| book[:authors].include?(email) }
+  end
+
+  def find_all_magazines_by_author_email(email)
+    @magazines.select { |magazine| magazine[:authors].include?(email) }
+  end
+
   def print_all_books
     @books.each_with_index do |book, i|
       puts "Title: #{book[:title]}"
@@ -61,4 +70,8 @@ parser = Parser.new(
 
 # p parser.find_book_by_isbn("2145-8548-3325")
 # p parser.find_magazine_by_isbn("2365-8745-7854")
-parser.print_all_books
+# parser.print_all_books
+# p parser.find_all_books_by_author_email("")
+# p parser.find_all_books_by_author_email("null-rabe@echocat.org").map { |book| book[:title] }
+# p parser.books
+# p parser.books.reduce([]) { |acc, book| acc.append(book[:authors]) }
