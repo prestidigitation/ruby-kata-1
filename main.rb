@@ -78,18 +78,16 @@ class Parser
   end
 end
 
-parser = Parser.new(
-  authors_path: "data/authors.csv",
-  books_path: "data/books.csv",
-  magazines_path: "data/magazines.csv"
-)
+# parser = Parser.new(
+#   authors_path: "data/authors.csv",
+#   books_path: "data/books.csv",
+#   magazines_path: "data/magazines.csv"
+# )
 
-# p parser.find_book_by_isbn("2145-8548-3325")
 # p parser.find_magazine_by_isbn("2365-8745-7854")
 # parser.print_all_book_info
 # p parser.find_all_books_by_author_email("")
 # p parser.find_all_books_by_author_email("null-rabe@echocat.org").map { |book| book[:title] }
 # p parser.books
 # p parser.books.reduce([]) { |acc, book| acc.append(book[:authors]) }
-
 # parser.print_all_book_and_magazine_info_sorted
