@@ -1,7 +1,7 @@
 require "csv"
 
 class MainProgram
-  attr_reader :books, :magazines
+  attr_reader :books, :magazines, :find_magazine_by_isbn
   def initialize(authors_path:, books_path:, magazines_path:)
     @authors = Parser.new(file_path: authors_path).parsed_object
     @books = Parser.new(file_path: books_path).parsed_object
@@ -78,8 +78,8 @@ class Parser
     ).map(&:to_h)
   end
 end
-
-# p parser.find_magazine_by_isbn("2365-8745-7854")
+ 
+# p MainProgram.find_magazine_by_isbn("2365-8745-7854")
 # parser.print_all_book_info
 # p parser.find_all_books_by_author_email("")
 # p parser.find_all_books_by_author_email("null-rabe@echocat.org").map { |book| book[:title] }
