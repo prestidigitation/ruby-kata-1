@@ -92,4 +92,4 @@ parser = Parser.new(
 # p parser.books
 # p parser.books.reduce([]) { |acc, book| acc.append(book[:authors]) }
 
-parser.print_all_book_and_magazine_info_sorted
+# parser.print_all_book_and_magazine_info_sorted
