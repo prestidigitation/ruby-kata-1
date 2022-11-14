@@ -59,33 +59,6 @@ class MainProgram
     sorted_magazines = magazines.sort_by { |magazine| magazine[:title] }
     print_all_magazine_info(sorted_magazines)
   end
-
-  def parse_authors_file
-    CSV.read(
-      authors_path,
-      headers: true,
-      header_converters: :symbol,
-      col_sep: ";"
-    ).map(&:to_h)
-  end
-
-  def parse_books_file
-    CSV.read(
-      books_path,
-      headers: true,
-      header_converters: :symbol,
-      col_sep: ";"
-    ).map(&:to_h)
-  end
-  
-  def parse_magazines_file
-    CSV.read(
-      magazines_path,
-      headers: true,
-      header_converters: :symbol,
-      col_sep: ";"
-    ).map(&:to_h)
-  end
 end
 
 class Parser
