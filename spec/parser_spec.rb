@@ -1,6 +1,6 @@
 require_relative "../main"
 
-describe Parser do
+describe MainProgram do
   describe "#find_book_by_isbn" do
     context "given an ISBN" do
       it "searches for and returns the respective book's info" do
@@ -15,7 +15,7 @@ end
 private
 
 def create_parser_instance
-  Parser.new(
+  MainProgram.new(
     authors_path: "data/authors.csv",
     books_path: "data/books.csv",
     magazines_path: "data/magazines.csv"

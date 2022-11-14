@@ -1,28 +1,11 @@
 require "csv"
 
-class Parser
+class MainProgram
   attr_reader :books, :magazines
   def initialize(authors_path:, books_path:, magazines_path:)
-    @authors = CSV.read(
-      authors_path,
-      headers: true,
-      header_converters: :symbol,
-      col_sep: ";"
-    ).map(&:to_h)
-    
-    @books = CSV.read(
-      books_path,
-      headers: true,
-      header_converters: :symbol,
-      col_sep: ";"
-    ).map(&:to_h)
-
-    @magazines = CSV.read(
-      magazines_path,
-      headers: true,
-      header_converters: :symbol,
-      col_sep: ";"
-    ).map(&:to_h)
+    @authors = Parser.new(file_path: authors_path).parsed_object
+    @books = Parser.new(file_path: books_path).parsed_object
+    @magazines = Parser.new(file_path: magazines_path).parsed_object
   end
 
   def find_book_by_isbn(isbn)
@@ -76,13 +59,52 @@ class Parser
     sorted_magazines = magazines.sort_by { |magazine| magazine[:title] }
     print_all_magazine_info(sorted_magazines)
   end
+
+  def parse_authors_file
+    CSV.read(
+      authors_path,
+      headers: true,
+      header_converters: :symbol,
+      col_sep: ";"
+    ).map(&:to_h)
+  end
+
+  def parse_books_file
+    CSV.read(
+      books_path,
+      headers: true,
+      header_converters: :symbol,
+      col_sep: ";"
+    ).map(&:to_h)
+  end
+  
+  def parse_magazines_file
+    CSV.read(
+      magazines_path,
+      headers: true,
+      header_converters: :symbol,
+      col_sep: ";"
+    ).map(&:to_h)
+  end
 end
 
-# parser = Parser.new(
-#   authors_path: "data/authors.csv",
-#   books_path: "data/books.csv",
-#   magazines_path: "data/magazines.csv"
-# )
+class Parser
+  attr_reader :parsed_object
+  def initialize(file_path:)
+    @parsed_object = parse_file(file_path)
+  end
+
+  private
+
+  def parse_file(file_path)
+    CSV.read(
+      file_path,
+      headers: true,
+      header_converters: :symbol,
+      col_sep: ";"
+    ).map(&:to_h)
+  end
+end
 
 # p parser.find_magazine_by_isbn("2365-8745-7854")
 # parser.print_all_book_info
