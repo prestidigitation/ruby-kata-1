@@ -1,7 +1,7 @@
 require "csv"
 
 class Parser
-  attr_reader :books
+  attr_reader :books, :magazines
   def initialize(authors_path:, books_path:, magazines_path:)
     @authors = CSV.read(
       authors_path,
@@ -26,19 +26,19 @@ class Parser
   end
 
   def find_book_by_isbn(isbn)
-    @books.find { |book| book[:isbn] == isbn}
+    books.find { |book| book[:isbn] == isbn}
   end
   
   def find_magazine_by_isbn(isbn)
-    @magazines.find { |magazine| magazine[:isbn] == isbn }
+    magazines.find { |magazine| magazine[:isbn] == isbn }
   end
 
   def find_all_books_by_author_email(email)
-    @books.select { |book| book[:authors].include?(email) }
+    books.select { |book| book[:authors].include?(email) }
   end
 
   def find_all_magazines_by_author_email(email)
-    @magazines.select { |magazine| magazine[:authors].include?(email) }
+    magazines.select { |magazine| magazine[:authors].include?(email) }
   end
 
   def print_book_info(book)
@@ -70,10 +70,10 @@ class Parser
   end
 
   def print_all_book_and_magazine_info_sorted
-    sorted_books = @books.sort_by { |book| book[:title]}
+    sorted_books = books.sort_by { |book| book[:title]}
     print_all_book_info(sorted_books)
     puts "\n"
-    sorted_magazines = @magazines.sort_by { |magazine| magazine[:title] }
+    sorted_magazines = magazines.sort_by { |magazine| magazine[:title] }
     print_all_magazine_info(sorted_magazines)
   end
 end
