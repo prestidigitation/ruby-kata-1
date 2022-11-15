@@ -8,7 +8,7 @@ describe MainProgram do
       it "searches for and returns the respective book's info" do
         parser = create_program_instance
         response = parser.find_book_by_isbn(isbn)
-        expect(response[:title]).to eq "Das große GU-Kochbuch Kochen für Kinder"
+        expect(response.title).to eq "Das große GU-Kochbuch Kochen für Kinder"
       end
 
       it "return nil when it can't find a book" do
@@ -19,15 +19,15 @@ describe MainProgram do
     end
   end
 
-  describe "#find_magazine_by_isbn" do
-    context "given an ISBN" do
-      isbn = "2365-8745-7854"
-      it "searches for and returns the respective magazine's info" do
-        parser = create_program_instance
-        response = parser.find_magazine_by_isbn(isbn)
-      end
-    end
-  end
+  # describe "#find_magazine_by_isbn" do
+  #   context "given an ISBN" do
+  #     isbn = "2365-8745-7854"
+  #     it "searches for and returns the respective magazine's info" do
+  #       parser = create_program_instance
+  #       response = parser.find_magazine_by_isbn(isbn)
+  #     end
+  #   end
+  # end
 end
 
 private

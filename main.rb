@@ -3,13 +3,13 @@ require "csv"
 class MainProgram
   attr_reader :books, :magazines, :find_magazine_by_isbn
   def initialize(authors_path:, books_path:, magazines_path:)
-    @authors = Parser.new(file_path: authors_path).parsed_object
+    # @authors = Parser.new(file_path: authors_path).parsed_object
     @books = Parser.new(file_path: books_path).parsed_object
-    @magazines = Parser.new(file_path: magazines_path).parsed_object
+    # @magazines = Parser.new(file_path: magazines_path).parsed_object
   end
 
   def find_book_by_isbn(isbn)
-    books.find { |book| book[:isbn] == isbn}
+    books.find { |book| book.isbn == isbn }
   end
   
   def find_magazine_by_isbn(isbn)
@@ -67,16 +67,24 @@ class Parser
     @parsed_object = parse_file(file_path)
   end
 
-  private
+  Book = Struct.new(:title, :isbn, :authors, :description)
 
   def parse_file(file_path)
-    CSV.read(
+    csv = CSV.read(
       file_path,
       headers: true,
       header_converters: :symbol,
       col_sep: ";"
-    ).map(&:to_h)
+    ).reduce([]) do |acc, row|
+      acc << Book.new(
+        row[:title],
+        row[:isbn],
+        row[:authors],
+        row[:description]
+      )
+    end
   end
+
 end
  
 # p MainProgram.find_magazine_by_isbn("2365-8745-7854")
