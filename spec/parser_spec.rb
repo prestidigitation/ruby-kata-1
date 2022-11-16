@@ -19,15 +19,15 @@ describe MainProgram do
     end
   end
 
-  # describe "#find_magazine_by_isbn" do
-  #   context "given an ISBN" do
-  #     isbn = "2365-8745-7854"
-  #     it "searches for and returns the respective magazine's info" do
-  #       parser = create_program_instance
-  #       response = parser.find_magazine_by_isbn(isbn)
-  #     end
-  #   end
-  # end
+  describe "#find_magazine_by_isbn" do
+    context "given an ISBN" do
+      isbn = "2365-8745-7854"
+      it "searches for and returns the respective magazine's info" do
+        parser = create_program_instance
+        response = parser.find_magazine_by_isbn(isbn)
+      end
+    end
+  end
 end
 
 private

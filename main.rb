@@ -3,9 +3,9 @@ require "csv"
 class MainProgram
   attr_reader :books, :magazines, :find_magazine_by_isbn
   def initialize(authors_path:, books_path:, magazines_path:)
-    # @authors = Parser.new(file_path: authors_path).parsed_object
-    @books = Parser.new(file_path: books_path).parsed_object
-    # @magazines = Parser.new(file_path: magazines_path).parsed_object
+    # @authors = Parser.new(file_path: authors_path).structured_data
+    @books = Parser.new(file_path: books_path).structured_data
+    @magazines = Parser.new(file_path: magazines_path).structured_data
   end
 
   def find_book_by_isbn(isbn)
@@ -13,7 +13,7 @@ class MainProgram
   end
   
   def find_magazine_by_isbn(isbn)
-    magazines.find { |magazine| magazine[:isbn] == isbn }
+    magazines.find { |magazine| magazine.isbn == isbn }
   end
 
   def find_all_books_by_author_email(email)
@@ -62,35 +62,70 @@ class MainProgram
 end
 
 class Parser
-  attr_reader :parsed_object
+  attr_reader :csv, :structured_data, :type
   def initialize(file_path:)
-    @parsed_object = parse_file(file_path)
-  end
+    @type = file_path.split(/[\/.]/)[1]
+    @csv = parse_file_into_csv_object(file_path)
+    @structured_data = transform_csv_object_into_struct
+  end  
 
-  Book = Struct.new(:title, :isbn, :authors, :description)
-
-  def parse_file(file_path)
-    csv = CSV.read(
+  def parse_file_into_csv_object(file_path)
+    CSV.read(
       file_path,
       headers: true,
       header_converters: :symbol,
       col_sep: ";"
-    ).reduce([]) do |acc, row|
-      acc << Book.new(
-        row[:title],
-        row[:isbn],
-        row[:authors],
-        row[:description]
-      )
+    )
+  end
+
+  def book_struct
+    Struct.new(:title, :isbn, :authors, :description)
+  end
+
+  def magazine_struct
+    Struct.new(:title, :isbn, :authors, :published_on)
+  end
+
+  def author_struct
+    # Struct.new(:filler)
+  end
+
+  def transform_csv_object_into_struct
+    if type == "books"
+      csv.reduce([]) do |acc, row|
+        acc << book_struct.new(
+          row[:title],
+          row[:isbn],
+          row[:authors],
+          row[:description]
+        )
+      end
+    elsif type == "magazines"
+      csv.reduce([]) do |acc, row|
+        acc << magazine_struct.new(
+          row[:title],
+          row[:isbn],
+          row[:authors],
+          row[:publishedat]
+        )
+      end
+    # elsif type == "authors"
+    #   # something
     end
   end
 
 end
- 
-# p MainProgram.find_magazine_by_isbn("2365-8745-7854")
-# parser.print_all_book_info
-# p parser.find_all_books_by_author_email("")
-# p parser.find_all_books_by_author_email("null-rabe@echocat.org").map { |book| book[:title] }
-# p parser.books
-# p parser.books.reduce([]) { |acc, book| acc.append(book[:authors]) }
-# parser.print_all_book_and_magazine_info_sorted
+
+# parser = Parser.new(file_path: "data/magazines.csv")
+# program = MainProgram.new(
+#   authors_path: "data/authors.csv",
+#   books_path: "data/books.csv",
+#   magazines_path: "data/magazines.csv"
+# )
+# p program.find_magazine_by_isbn("2365-8745-7854")
+# program.print_all_book_info
+# p program.find_all_books_by_author_email("")
+# p program.find_all_books_by_author_email("null-rabe@echocat.org").map { |book| book[:title] }
+# p program.books
+# p program.books.reduce([]) { |acc, book| acc.append(book[:authors]) }
+# program.print_all_book_and_magazine_info_sorted
