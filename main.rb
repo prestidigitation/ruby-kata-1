@@ -1,7 +1,7 @@
 require "csv"
 
 class MainProgram
-  attr_reader :books, :magazines, :find_magazine_by_isbn
+  attr_reader :books, :magazines
   def initialize(authors_path:, books_path:, magazines_path:)
     # @authors = Parser.new(file_path: authors_path).structured_data
     @books = Parser.new(file_path: books_path).structured_data
@@ -11,17 +11,23 @@ class MainProgram
   def find_book_by_isbn(isbn)
     books.find { |book| book.isbn == isbn }
   end
-  
+
   def find_magazine_by_isbn(isbn)
     magazines.find { |magazine| magazine.isbn == isbn }
   end
 
   def find_all_books_by_author_email(email)
-    books.select { |book| book[:authors].include?(email) }
+    books.select { |book| book.authors.include?(email) }
   end
 
   def find_all_magazines_by_author_email(email)
-    magazines.select { |magazine| magazine[:authors].include?(email) }
+    magazines.select { |magazine| magazine.authors.include?(email) }
+  end
+
+  def find_all_books_and_magazines_by_author_email(email)
+    books = find_all_books_by_author_email(email)
+    magazines = find_all_magazines_by_author_email(email)
+    books.concat(magazines)
   end
 
   def print_book_info(book)
@@ -45,6 +51,10 @@ class MainProgram
     end
   end
 
+  def all_authors(collection)
+    collection.reduce([]) { |acc, item| acc << item.authors }
+  end
+
   def print_all_magazine_info(magazines)
     magazines.each_with_index do |magazine, i|
       print_magazine_info(magazine)
@@ -53,7 +63,7 @@ class MainProgram
   end
 
   def print_all_book_and_magazine_info_sorted
-    sorted_books = books.sort_by { |book| book[:title]}
+    sorted_books = books.sort_by { |book| book[:title] }
     print_all_book_info(sorted_books)
     puts "\n"
     sorted_magazines = magazines.sort_by { |magazine| magazine[:title] }
@@ -62,12 +72,16 @@ class MainProgram
 end
 
 class Parser
-  attr_reader :csv, :structured_data, :type
+  attr_reader :csv, :structured_data, :type, :book_struct
   def initialize(file_path:)
     @type = file_path.split(/[\/.]/)[1]
     @csv = parse_file_into_csv_object(file_path)
     @structured_data = transform_csv_object_into_struct
-  end  
+  end
+
+  # Struct.new("Author", :something)
+  Struct.new("Book", :title, :isbn, :authors, :description)
+  Struct.new("Magazine", :title, :isbn, :authors, :published_on)
 
   def parse_file_into_csv_object(file_path)
     CSV.read(
@@ -78,22 +92,10 @@ class Parser
     )
   end
 
-  def book_struct
-    Struct.new(:title, :isbn, :authors, :description)
-  end
-
-  def magazine_struct
-    Struct.new(:title, :isbn, :authors, :published_on)
-  end
-
-  def author_struct
-    # Struct.new(:filler)
-  end
-
   def transform_csv_object_into_struct
     if type == "books"
       csv.reduce([]) do |acc, row|
-        acc << book_struct.new(
+        acc << Struct::Book.new(
           row[:title],
           row[:isbn],
           row[:authors],
@@ -102,7 +104,7 @@ class Parser
       end
     elsif type == "magazines"
       csv.reduce([]) do |acc, row|
-        acc << magazine_struct.new(
+        acc << Struct::Magazine.new(
           row[:title],
           row[:isbn],
           row[:authors],
@@ -110,18 +112,22 @@ class Parser
         )
       end
     # elsif type == "authors"
-    #   # something
+    #   "something"
     end
   end
-
 end
 
 # parser = Parser.new(file_path: "data/magazines.csv")
-# program = MainProgram.new(
-#   authors_path: "data/authors.csv",
-#   books_path: "data/books.csv",
-#   magazines_path: "data/magazines.csv"
-# )
+program = MainProgram.new(
+  authors_path: "data/authors.csv",
+  books_path: "data/books.csv",
+  magazines_path: "data/magazines.csv"
+)
+
+# p program.all_authors(program.books)
+# p program.all_authors(program.magazines)
+# p program.books
+
 # p program.find_magazine_by_isbn("2365-8745-7854")
 # program.print_all_book_info
 # p program.find_all_books_by_author_email("")

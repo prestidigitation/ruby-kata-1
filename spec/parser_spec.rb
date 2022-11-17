@@ -11,7 +11,7 @@ describe MainProgram do
         expect(response.title).to eq "Das große GU-Kochbuch Kochen für Kinder"
       end
 
-      it "return nil when it can't find a book" do
+      it "returns nil when it can't find a book" do
         parser = create_program_instance
         response = parser.find_book_by_isbn("555555555555555")
         expect(response).to be_nil
@@ -25,6 +25,36 @@ describe MainProgram do
       it "searches for and returns the respective magazine's info" do
         parser = create_program_instance
         response = parser.find_magazine_by_isbn(isbn)
+      end
+    end
+  end
+
+  describe "#find_all_books_by_author_email" do
+    context "given an author's email" do
+      email = "null-rabe@echocat.org"
+      it "returns all books with that author's email" do
+        parser = create_program_instance
+        response = parser.find_all_books_by_author_email(email)
+        titles = response.map { |item| item.title }
+        expect(titles).to contain_exactly(
+          "Das Piratenkochbuch. Ein Spezialitätenkochbuch mit den 150 leckersten Rezepten ",
+          "Genial italienisch"
+        )
+      end
+    end
+  end
+
+  xdescribe "#find_all_magazines_by_author_email" do
+  end
+
+  describe "#find_all_books_and_magazines_by_author_email" do
+    context "given an author's email" do
+      email = "null-gustafsson@echocat.org"
+      it "finds all books and magazines with that author's email" do
+        parser = create_program_instance
+        response = parser.find_all_books_and_magazines_by_author_email(email)
+        # p response
+        # p response.size
       end
     end
   end
