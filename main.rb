@@ -1,6 +1,8 @@
 require "csv"
 
 class MainProgram
+  include Printer
+
   attr_reader :books, :magazines
   def initialize(authors_path:, books_path:, magazines_path:)
     # @authors = Parser.new(file_path: authors_path).structured_data
@@ -30,44 +32,9 @@ class MainProgram
     books.concat(magazines)
   end
 
-  def print_book_info(book)
-    puts "Title: #{book.title}"
-    puts "ISBN: #{book.isbn}"
-    puts "Authors: #{book.authors}"
-    puts "Description: #{book.description}"
-  end
-
-  def print_magazine_info(magazine)
-    puts "Title: #{magazine.title}"
-    puts "ISBN: #{magazine.isbn}"
-    puts "Authors: #{magazine.authors}"
-    puts "Publication Date: #{magazine.published_on}"
-  end
-
-  def print_all_book_info(books)
-    books.each_with_index do |book, i|
-      print_book_info(book)
-      puts "=" * 100 unless books[i + 1].nil?
-    end
-  end
-
+  # for testing purposes
   def all_authors(collection)
     collection.reduce([]) { |acc, item| acc << item.authors }
-  end
-
-  def print_all_magazine_info(magazines)
-    magazines.each_with_index do |magazine, i|
-      print_magazine_info(magazine)
-      puts "=" * 100 unless magazines[i + 1].nil?
-    end
-  end
-
-  def print_all_book_and_magazine_info_sorted
-    sorted_books = books.sort_by { |book| book.title }
-    print_all_book_info(sorted_books)
-    puts "\n"
-    sorted_magazines = magazines.sort_by { |magazine| magazine.title }
-    print_all_magazine_info(sorted_magazines)
   end
 end
 
@@ -113,6 +80,44 @@ class Parser
     # elsif type == "authors"
     #   "something"
     end
+  end
+end
+
+module Printer
+  def print_book_info(book)
+    puts "Title: #{book.title}"
+    puts "ISBN: #{book.isbn}"
+    puts "Authors: #{book.authors}"
+    puts "Description: #{book.description}"
+  end
+
+  def print_magazine_info(magazine)
+    puts "Title: #{magazine.title}"
+    puts "ISBN: #{magazine.isbn}"
+    puts "Authors: #{magazine.authors}"
+    puts "Publication Date: #{magazine.published_on}"
+  end
+
+  def print_all_book_info(books)
+    books.each_with_index do |book, i|
+      print_book_info(book)
+      puts "=" * 100 unless books[i + 1].nil?
+    end
+  end
+
+  def print_all_magazine_info(magazines)
+    magazines.each_with_index do |magazine, i|
+      print_magazine_info(magazine)
+      puts "=" * 100 unless magazines[i + 1].nil?
+    end
+  end
+
+  def print_all_book_and_magazine_info_sorted
+    sorted_books = books.sort_by { |book| book.title }
+    print_all_book_info(sorted_books)
+    puts "\n"
+    sorted_magazines = magazines.sort_by { |magazine| magazine.title }
+    print_all_magazine_info(sorted_magazines)
   end
 end
 
